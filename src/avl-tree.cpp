@@ -27,6 +27,7 @@ int AVLTree::balanceFactor(const AVLNode* node) {
 }
 
 void AVLTree::updateHeight(AVLNode* node) {
+    contador.up_height++;
     node->height = 1 + std::max(height(node->left), height(node->right));
 }
 
@@ -36,6 +37,7 @@ AVLNode* AVLTree::minimum(AVLNode* node) {
 }
 
 AVLNode* AVLTree::rotateLeft(AVLNode* x) {
+    contador.rot++;
     AVLNode* y = x->right;
     x->right = y->left;
     y->left = x;
@@ -45,6 +47,7 @@ AVLNode* AVLTree::rotateLeft(AVLNode* x) {
 }
 
 AVLNode* AVLTree::rotateRight(AVLNode* y) {
+    contador.rot++;
     AVLNode* x = y->left;
     y->left = x->right;
     x->right = y;
@@ -75,6 +78,7 @@ AVLNode* AVLTree::rebalance(AVLNode* node) {
 bool AVLTree::search(int key) const {
     const AVLNode* cur = root;
     while (cur != nullptr) {
+        contador.compare++;
         if (key == cur->key) return true;
         cur = (key < cur->key) ? cur->left : cur->right;
     }
@@ -94,6 +98,7 @@ AVLNode* AVLTree::insert(AVLNode* node, int key, bool& inserted) {
         inserted = true;
         return new AVLNode{key, 1, nullptr, nullptr};
     }
+    contador.compare++;
     if (key < node->key) node->left = insert(node->left, key, inserted);
     else if (key > node->key) node->right = insert(node->right, key, inserted);
     else return node;  // valor repetido
@@ -112,6 +117,7 @@ bool AVLTree::remove(int key) {
 AVLNode* AVLTree::remove(AVLNode* node, int key, bool& removed) {
     if (node == nullptr) return nullptr;  // chave inexistente
 
+    contador.compare++;
     if (key < node->key) {
         node->left = remove(node->left, key, removed);
     } else if (key > node->key) {
@@ -172,4 +178,10 @@ void AVLTree::print(const AVLNode* node, const std::string& prefix, const char* 
 
     print(node->right, childPrefix, "D:", node->left == nullptr, false);
     print(node->left, childPrefix, "E:", true, false);
+}
+
+//-------------------------------------------------------------- altura
+
+int AVLTree::treeHeight() const {
+    return height(root);
 }

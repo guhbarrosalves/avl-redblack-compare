@@ -1,6 +1,7 @@
 #include "rb-tree.hpp"
 
 #include <iostream>
+#include <algorithm>
 
 namespace {
 const char* RESET = "\033[0m";
@@ -29,6 +30,7 @@ void RedBlackTree::destroy(RBNode* node) {
 RBNode* RedBlackTree::findNode(int key) const {
     RBNode* cur = root;
     while (cur != nil) {
+        contador.compare++;
         if (key == cur->key) return cur;
         cur = (key < cur->key) ? cur->left : cur->right;
     }
@@ -41,6 +43,7 @@ RBNode* RedBlackTree::minimum(RBNode* node) const {
 }
 
 void RedBlackTree::rotateLeft(RBNode* x) {
+    contador.rot++;
     RBNode* y = x->right;
     x->right = y->left;
     if (y->left != nil) y->left->parent = x;
@@ -53,6 +56,7 @@ void RedBlackTree::rotateLeft(RBNode* x) {
 }
 
 void RedBlackTree::rotateRight(RBNode* x) {
+    contador.rot++;
     RBNode* y = x->left;
     x->left = y->right;
     if (y->right != nil) y->right->parent = x;
@@ -84,6 +88,7 @@ bool RedBlackTree::insert(int key) {
     RBNode* cur = root;
     while (cur != nil) {
         parent = cur;
+        contador.compare++;
         if (key == cur->key) return false;  // valor repetido
         cur = (key < cur->key) ? cur->left : cur->right;
     }
@@ -106,6 +111,7 @@ void RedBlackTree::fixInsert(RBNode* z) {
                 z->parent->color = Color::BLACK;
                 uncle->color = Color::BLACK;
                 gp->color = Color::RED;
+                contador.rec += 3;
                 z = gp;
             } else {
                 if (z == z->parent->right) {
@@ -115,6 +121,7 @@ void RedBlackTree::fixInsert(RBNode* z) {
                 z->parent->color = Color::BLACK;
                 z->parent->parent->color = Color::RED;
                 rotateRight(z->parent->parent);
+                contador.rec += 2;
             }
         } else {
             RBNode* uncle = gp->left;
@@ -122,6 +129,7 @@ void RedBlackTree::fixInsert(RBNode* z) {
                 z->parent->color = Color::BLACK;
                 uncle->color = Color::BLACK;
                 gp->color = Color::RED;
+                contador.rec += 3;
                 z = gp;
             } else {
                 if (z == z->parent->left) {
@@ -131,9 +139,11 @@ void RedBlackTree::fixInsert(RBNode* z) {
                 z->parent->color = Color::BLACK;
                 z->parent->parent->color = Color::RED;
                 rotateLeft(z->parent->parent);
+                contador.rec += 2;
             }
         }
     }
+    contador.rec++;
     root->color = Color::BLACK;
 }
 
@@ -182,21 +192,25 @@ void RedBlackTree::fixRemove(RBNode* x) {
         if (x == x->parent->left) {
             RBNode* w = x->parent->right;
             if (w->color == Color::RED) {
+                contador.rec +=2;
                 w->color = Color::BLACK;
                 x->parent->color = Color::RED;
                 rotateLeft(x->parent);
                 w = x->parent->right;
             }
             if (w->left->color == Color::BLACK && w->right->color == Color::BLACK) {
+                contador.rec++;
                 w->color = Color::RED;
                 x = x->parent;
             } else {
                 if (w->right->color == Color::BLACK) {
+                    contador.rec +=2;
                     w->left->color = Color::BLACK;
                     w->color = Color::RED;
                     rotateRight(w);
                     w = x->parent->right;
                 }
+                contador.rec += 3;
                 w->color = x->parent->color;
                 x->parent->color = Color::BLACK;
                 w->right->color = Color::BLACK;
@@ -206,21 +220,25 @@ void RedBlackTree::fixRemove(RBNode* x) {
         } else {
             RBNode* w = x->parent->left;
             if (w->color == Color::RED) {
+                contador.rec +=2;
                 w->color = Color::BLACK;
                 x->parent->color = Color::RED;
                 rotateRight(x->parent);
                 w = x->parent->left;
             }
             if (w->right->color == Color::BLACK && w->left->color == Color::BLACK) {
+                contador.rec++;
                 w->color = Color::RED;
                 x = x->parent;
             } else {
                 if (w->left->color == Color::BLACK) {
+                    contador.rec +=2;
                     w->right->color = Color::BLACK;
                     w->color = Color::RED;
                     rotateLeft(w);
                     w = x->parent->left;
                 }
+                contador.rec +=3;
                 w->color = x->parent->color;
                 x->parent->color = Color::BLACK;
                 w->left->color = Color::BLACK;
@@ -229,6 +247,7 @@ void RedBlackTree::fixRemove(RBNode* x) {
             }
         }
     }
+    contador.rec++;
     x->color = Color::BLACK;
 }
 
@@ -277,4 +296,16 @@ void RedBlackTree::print(const RBNode* node, const std::string& prefix, const ch
 
     print(node->right, childPrefix, "D:", node->left == nil, false);
     print(node->left, childPrefix, "E:", true, false);
+}
+
+//---------------------------------------------------------- altura
+
+int RedBlackTree::height(const RBNode* node) const {
+    if (node == nil) return 0;
+
+    return 1 + std::max(height(node->left), height(node->right));
+}
+
+int RedBlackTree::treeHeight() const {
+    return height(root);
 }
