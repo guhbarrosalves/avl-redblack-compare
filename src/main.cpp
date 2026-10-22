@@ -8,14 +8,17 @@ void Help(){
     std::cout << "INSERT value - insert value into the tree\n";
     std::cout << "REMOVE value - remove value from the tree\n";
     std::cout << "SEARCH value - search value in the tree\n";
-    std::cout << "INORDER - \n";
+    std::cout << "INORDER - displays the keys in ascending order\n";
     std::cout << "PRINT - displays the tree\n";
-    std::cout << "END - ends the program\n";
     std::cout << "HEIGHT - displays the height of tree\n";
+    std::cout << "END - ends the program\n";
 }
 
 template <typename Tree>
 void Execute(Tree& tree) {
+
+    
+    Help();
     std::string comand;
     while(std::cin >> comand){
         if(comand == "END")
@@ -24,17 +27,20 @@ void Execute(Tree& tree) {
         else if(comand == "INSERT"){
             int value;
             std::cin >> value;
-            tree.insert(value);
+            if(tree.insert(value)) std::cout << "inserted\n";
+            else std::cout << "already existis, insertion ignored\n";
         }
         else if(comand == "REMOVE"){
             int value;
             std::cin >> value;
-            tree.remove(value);
+            if(tree.remove(value)) std::cout << "removed\n";
+            else std::cout << "does not exist, nothing removed\n";
         }
         else if(comand == "SEARCH"){
             int value;
             std::cin >> value;
-            tree.search(value);
+            if(tree.search(value)) std::cout << "found\n";
+            else std::cout << "not found\n";
         }
         else if(comand == "INORDER"){
             tree.inOrder();
@@ -49,7 +55,7 @@ void Execute(Tree& tree) {
             Help();
         }
         else{
-            std::cout << "unknown comand\n";
+            std::cout << "unknown command\n";
         }
 
     }
