@@ -12,6 +12,16 @@ void Help(){
     std::cout << "PRINT - displays the tree\n";
     std::cout << "HEIGHT - displays the height of tree\n";
     std::cout << "END - ends the program\n";
+    std::cout << "COUNTERS - displays the counters\n";
+    std::cout << "RESET - resets the counters\n";
+}
+
+void PrintCounters(const AVL_cont& c) {
+    std::cout << "compare=" << c.compare << "\nrot=" << c.rot << "\nup_height=" << c.up_height << "\n";
+}
+
+void PrintCounters(const RB_cont& c) {
+    std::cout << "compare=" << c.compare << "\nrot=" << c.rot << "\nrec=" << c.rec << "\n";
 }
 
 template <typename Tree>
@@ -50,6 +60,12 @@ void Execute(Tree& tree) {
         }
         else if(comand == "HEIGHT"){
             std::cout << "Height: " << tree.treeHeight() << "\n";
+        }
+        else if (comand == "COUNTERS") {
+            PrintCounters(tree.read_cont());
+        }
+        else if (comand == "RESET") {
+            tree.zero_cont();
         }
         else if(comand == "-h"){
             Help();
