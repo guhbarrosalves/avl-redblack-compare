@@ -7,7 +7,7 @@ O programa em C++ cria uma única árvore por execução. Este módulo:
   4. devolve os números em um dicionário (que depois vira JSON).
 
 Uso (a partir da raiz do repositório, com o programa já compilado em ./tree):
-    python3 experimentos/experimento.py avl aleatorio 1000 --semente 3
+    python3 experimentos/script.py avl aleatorio 1000 --semente 3
 """
 import argparse
 import json
