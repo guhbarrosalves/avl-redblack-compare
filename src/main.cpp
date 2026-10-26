@@ -17,11 +17,11 @@ void Help(){
 }
 
 void PrintCounters(const AVL_cont& c) {
-    std::cout << "compare=" << c.compare << "\nrot=" << c.rot << "\nup_height=" << c.up_height << "\n";
+    std::cout << "COUNTERS compare=" << c.compare << " rot=" << c.rot << " up_height=" << c.up_height << "\n";
 }
 
 void PrintCounters(const RB_cont& c) {
-    std::cout << "compare=" << c.compare << "\nrot=" << c.rot << "\nrec=" << c.rec << "\n";
+    std::cout << "COUNTERS compare=" << c.compare << " rot=" << c.rot << " rec=" << c.rec << "\n";
 }
 
 template <typename Tree>
