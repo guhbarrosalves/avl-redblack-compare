@@ -278,8 +278,6 @@ Em outras palavras, o trabalho de manutenção por operação da rubro-negra é 
 | Rotações por remoção | praticamente iguais |
 | Manutenção do balanceamento | rubro-negra constante; AVL cresce com log N |
 
-A recomendação técnica para o cenário da Black Friday, com o raciocínio completo, está na apresentação em PDF.
-
 ## 10. Limitações
 
 - Os contadores medem **quantidade de trabalho**, não **tempo de execução**. Não se pode concluir daqui que uma árvore é "mais rápida", apenas que faz mais ou menos trabalho de um determinado tipo.
